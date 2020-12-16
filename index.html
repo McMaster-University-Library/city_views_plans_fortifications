@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css">
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+        <link rel="stylesheet" href="css/Control.OSMGeocoder.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body style="font-family:Segoe UI, Arial; font-size:1 11px;">
+	
+	<header>
+		<div class="logo">
+			<img src="images/mcm-library_left-col.png" alt="McMaster University Library logo" />
+		</div>
+		
+		<div id="buttonzone" style="right:1vw">
+		<a href="https://digitalarchive.mcmaster.ca/islandora/object/macrepo%3A77283" style="text-decoration:none; margin-left: 0.8vw" target="_blank"><button class="button">Digital Archive</button></a>
+		<a href="https://library.mcmaster.ca/spaces/maps-data-gis" style="text-decoration:none" target="_blank"><button class="button">Contact</button></a>
+		</div>
+	
+		<hgroup>
+		<h1 style="font-size:1.4vw; margin-left:6vw;"><b>McMaster University Library | </b>City Views, Plans, Fortifications, and Environs</h1>
+		</hgroup>
+
+	</header>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/Control.OSMGeocoder.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="data/city_fortifications_environs_pts_1.js"></script>
+        <script src="data/city_views_plans_pts_2.js"></script>
+        <script>
+        
+		var osm = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+	maxZoom: 28});
+var grayscale = L.tileLayer('http://www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+	maxZoom: 28});
+var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']});
+
+var baseMaps = {"OpenStreetMap": osm, "Grayscale": grayscale, "Satellite": googleSat};
+
+		var map = L.map('map', {
+            zoomControl:true, layers:[osm], maxZoom:18, minZoom:3
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        var overlay_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            opacity: 1.0
+        });
+        
+        function pop_city_fortifications_environs_pts_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>' + (feature.properties['title'] !== null ? Autolinker.link(String(feature.properties['title'])) : '') + '</strong></td>\
+                    </tr>\
+                   	<tr>\
+                        <td colspan="2">' + (feature.properties['thumb'] !== null ? Autolinker.link(String(feature.properties['thumb'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Author(s): </strong>' + (feature.properties['Author'] !== null ? Autolinker.link(String(feature.properties['Author'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Publisher: </strong>' + (feature.properties['Publisher'] !== null ? Autolinker.link(String(feature.properties['Publisher'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Date: </strong>' + (feature.properties['Date'] !== null ? Autolinker.link(String(feature.properties['Date'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Scale: </strong>' + (feature.properties['Scale'] !== null ? Autolinker.link(String(feature.properties['Scale'])) : '') + '</td>\
+                    </tr>\
+					<tr>\
+                        <td colspan="2">' + (feature.properties['url'] !== null ? Autolinker.link(String(feature.properties['url'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 600});
+        }
+
+        function style_city_fortifications_environs_pts_1_0() {
+            return {
+                pane: 'pane_city_fortifications_environs_pts_1',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(134,32,35,1.0)',
+            }
+        }
+        map.createPane('pane_city_fortifications_environs_pts_1');
+        map.getPane('pane_city_fortifications_environs_pts_1').style.zIndex = 401;
+        map.getPane('pane_city_fortifications_environs_pts_1').style['mix-blend-mode'] = 'normal';
+        var layer_city_fortifications_environs_pts_1 = new L.geoJson(json_city_fortifications_environs_pts_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_city_fortifications_environs_pts_1',
+            onEachFeature: pop_city_fortifications_environs_pts_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_city_fortifications_environs_pts_1_0(feature));
+            },
+        });
+        var cluster_city_fortifications_environs_pts_1 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_city_fortifications_environs_pts_1.addLayer(layer_city_fortifications_environs_pts_1);
+
+        bounds_group.addLayer(layer_city_fortifications_environs_pts_1);
+        cluster_city_fortifications_environs_pts_1.addTo(map);
+        function pop_city_views_plans_pts_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>' + (feature.properties['title'] !== null ? Autolinker.link(String(feature.properties['title'])) : '') + '</strong></td>\
+                    </tr>\
+                   	<tr>\
+                        <td colspan="2">' + (feature.properties['thumb'] !== null ? Autolinker.link(String(feature.properties['thumb'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Author(s): </strong>' + (feature.properties['Author'] !== null ? Autolinker.link(String(feature.properties['Author'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Publisher: </strong>' + (feature.properties['Publisher'] !== null ? Autolinker.link(String(feature.properties['Publisher'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Date: </strong>' + (feature.properties['Date'] !== null ? Autolinker.link(String(feature.properties['Date'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Scale: </strong>' + (feature.properties['Scale'] !== null ? Autolinker.link(String(feature.properties['Scale'])) : '') + '</td>\
+                    </tr>\
+					<tr>\
+                        <td colspan="2">' + (feature.properties['url'] !== null ? Autolinker.link(String(feature.properties['url'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_city_views_plans_pts_2_0() {
+            return {
+                pane: 'pane_city_views_plans_pts_2',
+                radius: 6.5,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,204,51,1.0)',
+            }
+        }
+        map.createPane('pane_city_views_plans_pts_2');
+        map.getPane('pane_city_views_plans_pts_2').style.zIndex = 402;
+        map.getPane('pane_city_views_plans_pts_2').style['mix-blend-mode'] = 'normal';
+        var layer_city_views_plans_pts_2 = new L.geoJson(json_city_views_plans_pts_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_city_views_plans_pts_2',
+            onEachFeature: pop_city_views_plans_pts_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_city_views_plans_pts_2_0(feature));
+            },
+        });
+        var cluster_city_views_plans_pts_2 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_city_views_plans_pts_2.addLayer(layer_city_views_plans_pts_2);
+
+        bounds_group.addLayer(layer_city_views_plans_pts_2);
+        cluster_city_views_plans_pts_2.addTo(map);
+        var osmGeocoder = new L.Control.OSMGeocoder({
+            collapsed: false,
+            position: 'topright',
+            text: 'Search',
+        });
+        osmGeocoder.addTo(map);
+      
+        L.control.layers(baseMaps,{'<img src="legend/city_views_plans_pts_2.png" alt=""/> City View and Plan, Inset Maps': cluster_city_views_plans_pts_2,'<img src="legend/city_fortifications_environs_pts_1.png" alt=""/> City Fortifications and Environs': cluster_city_fortifications_environs_pts_1,},{collapsed:false}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
