@@ -1,12 +1,11 @@
-<!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-		<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
         <link rel="stylesheet" href="css/leaflet.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/MarkerCluster.css">
@@ -56,7 +55,7 @@
         <script src="data/city_views_plans_pts_2.js"></script>
         <script>
         
-		var osm = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+var osm = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
 	maxZoom: 28});
 var grayscale = L.tileLayer('http://www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
@@ -68,9 +67,7 @@ var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
 
 var baseMaps = {"OpenStreetMap": osm, "Grayscale": grayscale, "Satellite": googleSat};
 
-		var map = L.map('map', {
-            zoomControl:true, layers:[osm], maxZoom:18, minZoom:3
-        })
+var map = L.map('map', {zoomControl:true, layers:[osm], maxZoom:18, minZoom:3})
         var hash = new L.Hash(map);
         map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
         var bounds_group = new L.featureGroup([]);
