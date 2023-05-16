@@ -58,8 +58,8 @@
 var osm = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
 	maxZoom: 28});
-var grayscale = L.tileLayer('http://www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+var grayscale = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
+	attribution: '&copy;Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
 	maxZoom: 28});
 var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
     maxZoom: 20,
@@ -110,7 +110,7 @@ var map = L.map('map', {zoomControl:true, layers:[osm], maxZoom:18, minZoom:3})
         function style_city_fortifications_environs_pts_1_0() {
             return {
                 pane: 'pane_city_fortifications_environs_pts_1',
-                radius: 8.0,
+                radius: 10.0,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -173,7 +173,7 @@ var map = L.map('map', {zoomControl:true, layers:[osm], maxZoom:18, minZoom:3})
         function style_city_views_plans_pts_2_0() {
             return {
                 pane: 'pane_city_views_plans_pts_2',
-                radius: 6.5,
+                radius: 8,
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
